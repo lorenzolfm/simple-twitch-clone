@@ -1,7 +1,13 @@
 import { BrowserRouter, Route } from 'react-router-dom';
 
 import { Header } from './Header';
-import { StreamDelete, StreamCreate, StreamShow, StreamList, StreamEdit } from './streams';
+import {
+  StreamDelete,
+  StreamCreate,
+  StreamShow,
+  StreamList,
+  StreamEdit,
+} from './streams';
 
 export const App = (): JSX.Element => {
   return (
