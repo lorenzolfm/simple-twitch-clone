@@ -1,8 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
+
+import { StoreState } from '../../reducers';
+import { Auth } from '../../reducers/authReducer';
+import { signIn, signOut } from '../../actions';
 import { Button } from './Button';
 
-export const GoogleAuth = (): JSX.Element => {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+interface Props extends Auth {
+  signIn: typeof signIn;
+  signOut: typeof signOut;
+}
+
+const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
   let auth: gapi.auth2.GoogleAuth;
 
   useEffect(() => {
@@ -14,12 +23,15 @@ export const GoogleAuth = (): JSX.Element => {
 
       auth = window.gapi.auth2.getAuthInstance();
 
-      onAuthChange();
+      onAuthChange(auth.isSignedIn.get());
       auth.isSignedIn.listen(onAuthChange);
     });
   });
 
-  const onAuthChange = () => setIsSignedIn(auth.isSignedIn.get());
+  const onAuthChange = (isSignedIn: boolean) => {
+    if (isSignedIn) signIn();
+    else signOut();
+  };
 
   const renderAuthButton = (): JSX.Element | null => {
     if (isSignedIn === null) return null;
@@ -31,3 +43,12 @@ export const GoogleAuth = (): JSX.Element => {
 
   return <div>{renderAuthButton()}</div>;
 };
+
+const mapStateToProps = (state: StoreState): Auth => {
+  return { isSignedIn: state.auth.isSignedIn };
+};
+
+export const GoogleAuth = connect(
+  mapStateToProps,
+  { signIn, signOut },
+)(_GoogleAuth);
