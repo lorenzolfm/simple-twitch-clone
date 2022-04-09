@@ -29,7 +29,7 @@ const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
   });
 
   const onAuthChange = (isSignedIn: boolean) => {
-    if (isSignedIn) signIn();
+    if (isSignedIn) signIn(auth.currentUser.get().getId());
     else signOut();
   };
 
@@ -45,7 +45,7 @@ const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
 };
 
 const mapStateToProps = (state: StoreState): Auth => {
-  return { isSignedIn: state.auth.isSignedIn };
+  return { isSignedIn: state.auth.isSignedIn, userId: state.auth.userId };
 };
 
 export const GoogleAuth = connect(

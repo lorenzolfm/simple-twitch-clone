@@ -1,11 +1,13 @@
-import { Action, ActionTypes } from '../actions/types';
+import { Action, ActionTypes } from '../actions';
 
 export interface Auth {
   isSignedIn: boolean | null;
+  userId: string | null;
 }
 
 const INITIAL_STATE: Auth = {
   isSignedIn: null,
+  userId: null,
 };
 
 export const authReducer = (
@@ -14,9 +16,9 @@ export const authReducer = (
 ) => {
   switch (action.type) {
     case ActionTypes.SIGN_IN:
-      return { ...state, isSignedIn: true };
+      return { ...state, isSignedIn: true, userId: action.payload };
     case ActionTypes.SIGN_OUT:
-      return { ...state, isSignedIn: false };
+      return { ...state, isSignedIn: false, userId: null };
     default:
       return state;
   }
