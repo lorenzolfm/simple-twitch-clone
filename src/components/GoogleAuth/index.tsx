@@ -14,7 +14,6 @@ interface Props extends Auth {
 let auth: gapi.auth2.GoogleAuth;
 
 const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
-
   useEffect(() => {
     window.gapi.load('client:auth2', async () => {
       await window.gapi.client.init({
