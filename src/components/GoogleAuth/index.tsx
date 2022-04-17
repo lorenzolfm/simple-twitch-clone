@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { StoreState } from '../../reducers';
@@ -11,8 +11,9 @@ interface Props extends Auth {
   signOut: typeof signOut;
 }
 
+let auth: gapi.auth2.GoogleAuth;
+
 const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
-  let auth: gapi.auth2.GoogleAuth;
 
   useEffect(() => {
     window.gapi.load('client:auth2', async () => {
@@ -26,7 +27,7 @@ const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
       onAuthChange(auth.isSignedIn.get());
       auth.isSignedIn.listen(onAuthChange);
     });
-  });
+  }, []);
 
   const onAuthChange = (isSignedIn: boolean) => {
     if (isSignedIn) signIn(auth.currentUser.get().getId());
