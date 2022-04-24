@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import streams from '../apis/streams';
+import { StoreState } from '../reducers';
 import { CreateStreamForm, Stream } from '../types';
 import { ActionTypes } from './types';
 
@@ -7,9 +8,9 @@ export interface CreateStreamAction {
   type: ActionTypes.CREATE_STREAM;
   payload: Stream;
 }
-
-export const createStream = (formValues: CreateStreamForm) => async (dispatch: Dispatch) => {
-  const response = await streams.post<Stream>('/streams', formValues);
+export const createStream = (formValues: CreateStreamForm) => async (dispatch: Dispatch, getState: () => StoreState) => {
+  const { userId } = getState().auth;
+  const response = await streams.post<Stream>('/streams', { ...formValues, userId });
 
   dispatch<CreateStreamAction>({
     type: ActionTypes.CREATE_STREAM,
