@@ -12,6 +12,7 @@ export interface CreateStreamAction {
 export const createStream = (formValues: CreateStreamForm) =>
   async (dispatch: Dispatch, getState: () => StoreState) => {
     const { userId } = getState().auth;
+
     const response = await streams.post<Stream>('/streams', { ...formValues, userId });
 
     dispatch<CreateStreamAction>({
@@ -57,14 +58,14 @@ export interface EditStreamAction {
 
 export const editStream = (id: number, formValues: CreateStreamForm) =>
   async (dispatch: Dispatch) => {
-    const response = await streams.put<Stream>(`/streams/${id}`, {
-      formValues,
-    });
+    const response = await streams.patch<Stream>(`/streams/${id}`, formValues);
 
     dispatch<EditStreamAction>({
       type: ActionTypes.EDIT_STREAM,
       payload: response.data,
     });
+
+    history.push('/');
   };
 
 export interface DeleteStreamAction {

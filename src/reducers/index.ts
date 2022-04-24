@@ -8,7 +8,7 @@ import { streamReducer } from './streamReducers';
 export interface StoreState {
   auth: AuthState;
   form: FormStateMap;
-  streams: StreamsState
+  streams: StreamsState;
 }
 
 export const reducers = combineReducers<StoreState>({

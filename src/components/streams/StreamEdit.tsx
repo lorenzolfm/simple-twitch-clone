@@ -1,19 +1,24 @@
+import _ from 'lodash';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchStream } from '../../actions';
+
+import { fetchStream, editStream } from '../../actions';
 import { StoreState } from '../../reducers';
-import { Stream } from '../../types';
+import { CreateStreamForm, Stream } from '../../types';
+import { StreamForm } from './StreamForm';
 
 type Props = {
   match: { params: { id: number } };
   stream: Stream
   fetchStream: (id: number) => Promise<void>;
+  editStream: (id: number, formValues: CreateStreamForm) => Promise<void>
 }
 
 export const _StreamEdit = (
   {
-    stream,
+    editStream,
     fetchStream,
+    stream,
     match: { params: { id } },
   }: Props,
 ) => {
@@ -21,10 +26,22 @@ export const _StreamEdit = (
     fetchStream(id);
   }, []);
 
+  const onSubmit = (formValues: CreateStreamForm) => {
+    editStream(id, formValues);
+  };
+
   if (!stream)
     return <div>Loading</div>;
 
-  return <div>{stream.title}</div>;
+  return (
+    <div>
+      <h3>Edit a Stream</h3>
+      <StreamForm
+        initialValues={_.pick(stream, 'title', 'description')}
+        onSubmitHandler={onSubmit}
+      />
+    </div>
+  );
 };
 
 const mapStateToProps = (
@@ -34,5 +51,7 @@ const mapStateToProps = (
   return { stream: streams[id] };
 };
 
-export const StreamEdit =
-  connect(mapStateToProps, { fetchStream })(_StreamEdit);
+export const StreamEdit = connect(
+  mapStateToProps,
+  { editStream, fetchStream },
+)(_StreamEdit);
