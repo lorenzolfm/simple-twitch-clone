@@ -6,30 +6,30 @@ import { CreateStreamForm } from '../../types';
 interface PropsFromRedux { createStream: typeof createStream }
 type Props = InjectedFormProps<CreateStreamForm, PropsFromRedux> & PropsFromRedux;
 
-const _StreamCreate = ({ handleSubmit, createStream }: Props) => {
-  const renderInput = (
-    { input, label, meta }:
-    WrappedFieldProps & { label: string },
-  ) => {
-    const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
+
+const renderInput = (
+  { input, label, meta }:
+  WrappedFieldProps & { label: string },
+) => {
+  const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
+  return (
+    <div className={className}>
+      <label>{label}</label>
+      <input {...input} autoComplete="off" />
+      {renderError(meta)}
+    </div>
+  );
+};
+
+const renderError = ({ error, touched }: WrappedFieldMetaProps) => {
+  if (touched && error)
     return (
-      <div className={className}>
-        <label>{label}</label>
-        <input {...input} autoComplete="off" />
-        {renderError(meta)}
+      <div className="ui error message">
+        <div className="header">{error}</div>
       </div>
     );
-  };
-
-  const renderError = ({ error, touched }: WrappedFieldMetaProps) => {
-    if (touched && error)
-      return (
-        <div className="ui error message">
-          <div className="header">{error}</div>
-        </div>
-      );
-  };
-
+};
+const _StreamCreate = ({ handleSubmit, createStream }: Props) => {
   const onSubmit = (formValues: CreateStreamForm) => {
     createStream(formValues);
   };
