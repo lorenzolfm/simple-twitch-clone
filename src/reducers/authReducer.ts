@@ -1,17 +1,13 @@
 import { Action, ActionTypes } from '../actions';
+import { AuthState } from '../types';
 
-export interface Auth {
-  isSignedIn: boolean | null;
-  userId: string | null;
-}
-
-const INITIAL_STATE: Auth = {
+const INITIAL_STATE: AuthState = {
   isSignedIn: null,
   userId: null,
 };
 
 export const authReducer = (
-  state: Auth = INITIAL_STATE,
+  state: AuthState = INITIAL_STATE,
   action: Action,
 ) => {
   switch (action.type) {

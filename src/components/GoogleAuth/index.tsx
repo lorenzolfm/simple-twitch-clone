@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { StoreState } from '../../reducers';
-import { Auth } from '../../reducers/authReducer';
 import { signIn, signOut } from '../../actions';
 import { Button } from './Button';
+import { AuthState } from '../../types';
 
-interface Props extends Auth {
+interface Props extends AuthState {
   signIn: typeof signIn;
   signOut: typeof signOut;
 }
@@ -44,7 +44,7 @@ const _GoogleAuth = ({ signIn, signOut, isSignedIn }: Props): JSX.Element => {
   return <div>{renderAuthButton()}</div>;
 };
 
-const mapStateToProps = (state: StoreState): Auth => {
+const mapStateToProps = (state: StoreState): AuthState => {
   return { isSignedIn: state.auth.isSignedIn, userId: state.auth.userId };
 };
 

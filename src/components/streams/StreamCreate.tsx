@@ -1,14 +1,16 @@
+import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm, WrappedFieldMetaProps, WrappedFieldProps } from 'redux-form';
+import { createStream } from '../../actions';
+import { CreateStreamForm } from '../../types';
 
-interface Form {
-  title?: string;
-  description?: string;
-}
+interface PropsFromRedux { createStream: typeof createStream }
+type Props = InjectedFormProps<CreateStreamForm, PropsFromRedux> & PropsFromRedux;
 
-type FieldProps = WrappedFieldProps & { label: string }
-
-const _StreamCreate = (props: InjectedFormProps<Form>) => {
-  const renderInput = ({ input, label, meta }: FieldProps) => {
+const _StreamCreate = ({ handleSubmit, createStream }: Props) => {
+  const renderInput = (
+    { input, label, meta }:
+    WrappedFieldProps & { label: string },
+  ) => {
     const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
     return (
       <div className={className}>
@@ -28,18 +30,23 @@ const _StreamCreate = (props: InjectedFormProps<Form>) => {
       );
   };
 
-  const onSubmit = (formValues: Form) => {
-    console.log(formValues);
+  const onSubmit = (formValues: CreateStreamForm) => {
+    createStream(formValues);
   };
 
   return (
-    <form className="ui form error" onSubmit={props.handleSubmit(onSubmit)}>
+    <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
       <Field name="title" component={renderInput} label="Enter Title" />
       <Field name="description" component={renderInput} label="Enter Description" />
       <button className="ui button primary">Submit</button>
     </form>
   );
 };
+
+interface Form {
+  title?: string;
+  description?: string;
+}
 
 type Errors = Form
 
@@ -55,7 +62,9 @@ const validate = (formValues: Form) => {
   return errors;
 };
 
-export const StreamCreate = reduxForm<Form>({
+const formWrapped = reduxForm<CreateStreamForm, Props>({
   form: 'streamCreate',
   validate,
 })(_StreamCreate);
+
+export const StreamCreate = connect<Promise<void>>(null, { createStream })(formWrapped);
