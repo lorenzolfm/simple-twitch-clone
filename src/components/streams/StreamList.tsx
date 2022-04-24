@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { fetchStreams } from '../../actions';
 import { StoreState } from '../../reducers';
 import { Stream } from '../../types';
@@ -7,10 +8,11 @@ import { Stream } from '../../types';
 interface Props {
   streams: Stream[];
   currentUserId: string | null;
+  isSignedIn: boolean | null;
   fetchStreams: () => Promise<void>;
 }
 
-const _StreamList = ({ fetchStreams, streams, currentUserId }: Props) => {
+const _StreamList = ({ fetchStreams, streams, currentUserId, isSignedIn }: Props) => {
   useEffect(() => {
     fetchStreams();
   }, []);
@@ -38,12 +40,22 @@ const _StreamList = ({ fetchStreams, streams, currentUserId }: Props) => {
     );
   });
 
+  const renderCreate = () => {
+    if (isSignedIn)
+      return (
+        <div style={{ textAlign: 'right' }}>
+          <Link to="/streams/new" className="ui button primary">Create Stream</Link>
+        </div>
+      );
+  };
+
   return (
     <div>
       <h2>Streams</h2>
       <div className="ui celled list">
         {renderedStreams}
       </div>
+      {renderCreate()}
     </div>
   );
 };
@@ -52,6 +64,7 @@ const mapStateToProps = ({ streams, auth }: StoreState) => {
   return {
     streams: (Object.values(streams) as Stream[]),
     currentUserId: auth.userId,
+    isSignedIn: auth.isSignedIn,
   };
 };
 
