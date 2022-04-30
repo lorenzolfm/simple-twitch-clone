@@ -80,4 +80,6 @@ export const deleteStream = (id: number) => async (dispatch: Dispatch) => {
     type: ActionTypes.DELETE_STREAM,
     payload: id,
   });
+
+  history.push('/');
 };
